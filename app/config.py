@@ -1,0 +1,1 @@
+DATABASE_URL = "postgres://avnadmin:AVNS_o2v9DUORW_XbV3Rc_YC@pg-fc09e40-green-cart.a.aivencloud.com:14377/defaultdb?sslmode=require"
