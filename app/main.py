@@ -1,5 +1,6 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
+from controller import llm_router
 
 app = FastAPI()
 
@@ -18,3 +19,6 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message": "Hello from green cart backend"}
+
+
+app.include_router(llm_router, prefix="/v1", tags=["LLM Services"])
