@@ -8,6 +8,7 @@ class Settings(BaseSettings):
   
   DATABASE_URL: str
   OPENFOODFACTS_API_URL: str
+  GEMINI_KEY: str
 
 # global instance
 settings = Settings()
