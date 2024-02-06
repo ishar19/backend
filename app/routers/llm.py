@@ -1,17 +1,20 @@
 from fastapi import APIRouter, Depends, HTTPException,WebSocket
 import google.generativeai as genai
-import config
+from ..config import settings
 import json
 
 # Model initialization
-genai.configure(api_key=config.GEMINI_KEY)
+genai.configure(api_key=settings.GEMINI_KEY)
 history = []
 model = genai.GenerativeModel('gemini-pro')
 chat = model.start_chat(history=history)
 
-router = APIRouter()
+llm_router = APIRouter(
+    prefix='/llm',
+    tags=['Gemini Model Chat']
+)
 
-@router.websocket("/ws")
+@llm_router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     
