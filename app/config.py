@@ -1,1 +1,13 @@
-DATABASE_URL = "postgres://avnadmin:AVNS_o2v9DUORW_XbV3Rc_YC@pg-fc09e40-green-cart.a.aivencloud.com:14377/defaultdb?sslmode=require"
+from dotenv import load_dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+load_dotenv(verbose=True)
+
+class Settings(BaseSettings):
+  model_config = SettingsConfigDict(env_file=".env")
+  
+  DATABASE_URL: str
+  OPENFOODFACTS_API_URL: str
+
+# global instance
+settings = Settings()

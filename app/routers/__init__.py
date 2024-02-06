@@ -1,0 +1,1 @@
+from .barcode_router import barcode_router
