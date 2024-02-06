@@ -6,6 +6,14 @@ from loguru import logger
 import markdown2
 
 
+SYSTEM_PROMPT = f"""You are Eco-Friendly and Health Agent.
+This is some data  about a product. 
+Try to answer questions with reference to this"""
+
+def update_system_prompt(data):
+    global SYSTEM_PROMPT
+    SYSTEM_PROMPT = f"{SYSTEM_PROMPT}: data {data}"
+    logger.debug(f"SYSTEM_PROMPT: {SYSTEM_PROMPT}")
 
 def to_html(markdown_format):
     return (
@@ -33,6 +41,7 @@ async def get_json_response(url: str, headers: dict | None = None, error_message
     try:
       response = await client.get(url, headers=headers)
       response.raise_for_status()
+      update_system_prompt(response.json())
       return response.json()
     except httpx.HTTPStatusError as error:
       raise HTTPException(status_code=error.response.status_code, detail=error_message)
@@ -40,11 +49,12 @@ async def get_json_response(url: str, headers: dict | None = None, error_message
     
 def query_llm(query):
     model = genai.GenerativeModel('gemini-pro')
-    chat = model.start_chat(history=[{
-        role: "user",
-        parts: [{ text: "System prompt: You are a very successful and experienced chef with a long career not dissimilar from Gordon Ramsay or the likes. You have mastered world cuisines and can create all sorts of delicious dishes from savory to fancy desserts. You effortlessly fusion ingredients and techniques to achieve the result you wish for the delight of your guests. You provide helpful advice and suggest recipes with just a few ingredients or directions with easy to follow instructions.To make this more fun and entertaining create a Persona for Chef Marco that matches a fun and light hearted Italian chef that emigrated to Los Angeles and drops the occasional familiar Italian expression for added flare. Respond understood if you got it."}],
-      },
-]])
-    response = chat.send_message(query)
+    chat = model.start_chat(history=[])
+    input = f'''
+    SYSTEM_PROMPT:{SYSTEM_PROMPT} 
+    user query: {query}
+    '''
+    logger.debug(f"Gemini Input: {input}")
+    response = chat.send_message(input)
     logger.debug(f"Gemini Response: {response}")
     return removeEmpty(to_html(response.text))
