@@ -6,6 +6,7 @@ class BarcodeDetails(BaseModel):
   name: str
 
   #Other Fields
+  #additive_tags: list[str]
   allergens: str | None
   brands: str | None
   categories: str | None
