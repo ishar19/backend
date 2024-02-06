@@ -11,3 +11,4 @@ class Settings(BaseSettings):
 
 # global instance
 settings = Settings()
+
