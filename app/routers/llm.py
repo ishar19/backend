@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException,WebSocket
 import google.generativeai as genai
 from ..config import settings
 import json
+import markdown2
 
 # Model initialization
 genai.configure(api_key=settings.GEMINI_KEY)
@@ -13,6 +14,28 @@ llm_router = APIRouter(
     prefix='/llm',
     tags=['Gemini Model Chat']
 )
+
+
+def to_html(markdown_format):
+    return (
+        markdown2.markdown(markdown_format)
+        .replace("\\", "")
+        .replace("<h1>", "<h7>")
+        .replace("</h1>", "</h7>")
+        .replace("\\\\", "")
+        .replace("```", "")
+        .replace("python", "")
+        .replace("\n","<br>")
+        .replace('"',"")
+        .replace("#","<b>")
+    )
+    
+
+def removeEmpty(paragraph):
+    lines = paragraph.split('\n')
+    non_empty_lines = [line for line in lines if line.strip() != '']
+    cleaned_paragraph = '\n'.join(non_empty_lines)
+    return cleaned_paragraph
 
 @llm_router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
