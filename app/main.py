@@ -9,7 +9,10 @@ from fastapi.security import (
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 
-
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+]
 
 #Fast API App Instance
 app = FastAPI()
@@ -40,4 +43,3 @@ async def root():
 
 app.include_router(llm_router)
 app.include_router(barcode_router)
-
