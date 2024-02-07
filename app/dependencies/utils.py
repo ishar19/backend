@@ -4,16 +4,37 @@ import httpx
 import google.generativeai as genai
 from loguru import logger
 import markdown2
+from ..schemas.barcode_details import BarcodeDetails
 
 
 SYSTEM_PROMPT = f"""You are Eco-Friendly and Health Agent.
-This is some data  about a product. 
+This is some data about a product in JSON Format. 
 Try to answer questions with reference to this"""
 
 def update_system_prompt(data):
-    global SYSTEM_PROMPT
-    SYSTEM_PROMPT = f"{SYSTEM_PROMPT}: data {data}"
-    logger.debug(f"SYSTEM_PROMPT: {SYSTEM_PROMPT}")
+  product = data.get('product')
+  data = BarcodeDetails(
+      id=1,
+      name=product.get('product_name'),
+      image_url=product.get('image_url'),
+      allergens=product.get('allergens'),
+      brands=product.get('brands'),
+      categories=product.get('categories'),
+      countries=product.get('countries'),
+      ecoscore_grade=product.get('ecoscore_grade'),
+      ecoscore_score=product.get('ecoscore_score'),
+      ingredients=product.get('ingredients_text_en'),
+      nova_group=product.get('nova_group'),
+      nutrient_levels=product.get('nutrient_levels') or {},
+      nutriments=product.get('nutriments') or {},
+      nutriscore_grade=product.get('nutriscore_grade'),
+      nutriscore_score=product.get('nutriscore_score'),
+      packaging=product.get('packaging_text_en'),
+      warnings=product.get('ecoscore_extended_data').get('impact').get('warnings') or []
+    )
+  global SYSTEM_PROMPT
+  SYSTEM_PROMPT = f"{SYSTEM_PROMPT}: data {data}"
+  logger.debug(f"SYSTEM_PROMPT: {SYSTEM_PROMPT}")
 
 def to_html(markdown_format):
     return (
