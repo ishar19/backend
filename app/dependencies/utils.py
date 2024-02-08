@@ -14,7 +14,7 @@ Try to answer questions with reference to this"""
 def update_system_prompt(data):
   product = data.get('product')
   data = BarcodeDetails(
-      id=1,
+      id=product.get('id'),
       name=product.get('product_name'),
       image_url=product.get('image_url'),
       allergens=product.get('allergens'),
