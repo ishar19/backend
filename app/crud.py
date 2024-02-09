@@ -7,7 +7,7 @@ from .models import History
 from .database import get_db
 
 
-def create_new_product(user_id, barcode,db: Session = Depends(get_db.asend(None))):
+def create_new_product(user_id, barcode, db: Session = Depends(get_db().asend(None))):
     try:
         new_id = uuid.uuid4()
         new_record = History(id=new_id, dateCreated=datetime.now(), user_id=user_id, barcode=barcode)

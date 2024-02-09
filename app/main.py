@@ -8,8 +8,7 @@ from fastapi.security import (
 )
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
-import models
-from .database import engine
+from .database import Base, engine
 
 origins = [
     "http://localhost",
@@ -32,7 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 
 @app.get("/")
