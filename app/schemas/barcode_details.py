@@ -22,3 +22,7 @@ class BarcodeDetails(BaseModel):
   nutriments: dict
   packaging: str | None
   warnings: list[str]
+  
+class RequestDetails(BaseModel):
+  user_id : int
+  barcode : int

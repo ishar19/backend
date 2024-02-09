@@ -1,9 +1,10 @@
 from ..dependencies.utils import get_json_response
 from ..config import settings
-from ..schemas.barcode_details import BarcodeDetails
+from ..schemas.barcode_details import BarcodeDetails, RequestDetails
 from fastapi import APIRouter, HTTPException
 from typing import Any
 from loguru import logger
+from ..crud import create_new_product
 
 barcode_router = APIRouter(
   prefix='/barcode',
@@ -12,13 +13,18 @@ barcode_router = APIRouter(
 
 
 @barcode_router.get("/details", response_model=BarcodeDetails)
-async def api_barcode_details(barcode: int) -> Any:
-  openfoodfacts_product_url = f'{settings.OPENFOODFACTS_API_URL}/product/{barcode}'
+async def api_barcode_details(request:RequestDetails) -> Any:
+  try:
+      create_new_product(request.user_id, request.barcode)
+  except:
+    raise HTTPException(status_code=400, detail="Failed to create a new barcode. Integrity constraint violated.")
+  
+  openfoodfacts_product_url = f'{settings.OPENFOODFACTS_API_URL}/product/{request.barcode}'
   response: dict = await get_json_response(openfoodfacts_product_url)
   if response.get('status') == 1:
     product = response.get('product')
     return BarcodeDetails(
-      id=barcode,
+      id=request.barcode,
       name=product.get('product_name'),
       image_url=product.get('image_url'),
       allergens=product.get('allergens'),
@@ -36,5 +42,6 @@ async def api_barcode_details(barcode: int) -> Any:
       packaging=product.get('packaging_text_en'),
       warnings=product.get('ecoscore_extended_data').get('impact').get('warnings') or []
     )
+      
   else:
     raise HTTPException(status_code=404, detail='Barcode not found')
