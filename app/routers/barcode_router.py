@@ -12,10 +12,11 @@ barcode_router = APIRouter(
 )
 
 
-@barcode_router.get("/details", response_model=BarcodeDetails)
+@barcode_router.post("/details", response_model=BarcodeDetails)
 async def api_barcode_details(request:RequestDetails) -> Any:
+  logger.debug(f"Request: {request}")
   try:
-      create_new_product(request.user_id, request.barcode)
+      id = create_new_product(request.user_id, request.barcode)
   except:
     raise HTTPException(status_code=400, detail="Failed to create a new barcode. Integrity constraint violated.")
   
@@ -24,6 +25,7 @@ async def api_barcode_details(request:RequestDetails) -> Any:
   if response.get('status') == 1:
     product = response.get('product')
     return BarcodeDetails(
+      history_id=id,  
       id=request.barcode,
       name=product.get('product_name'),
       image_url=product.get('image_url'),

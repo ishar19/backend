@@ -1,6 +1,8 @@
 from pydantic import BaseModel
+from uuid import UUID
 
 class BarcodeDetails(BaseModel):
+  history_id: UUID
   #Main Fields
   id: int
   name: str

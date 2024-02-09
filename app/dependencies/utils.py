@@ -58,11 +58,11 @@ def removeEmpty(paragraph):
     return cleaned_paragraph
 
 async def get_json_response(url: str, headers: dict | None = None, error_message: str | None = None) -> Any:
+  logger.debug(f"Fetching JSON from {url}")
   async with httpx.AsyncClient() as client:
     try:
       response = await client.get(url, headers=headers)
       response.raise_for_status()
-      update_system_prompt(response.json())
       return response.json()
     except httpx.HTTPStatusError as error:
       raise HTTPException(status_code=error.response.status_code, detail=error_message)
