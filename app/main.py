@@ -8,6 +8,8 @@ from fastapi.security import (
 )
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
+import models
+from .database import engine
 
 origins = [
     "http://localhost",
@@ -30,10 +32,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.get("/")
-async def root():
-    return {"message": "Hello Green Cart User!"}
+models.Base.metadata.create_all(bind=engine)
 
 
 @app.get("/")
