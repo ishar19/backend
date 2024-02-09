@@ -1,10 +1,10 @@
 from ..dependencies.utils import get_json_response
 from ..config import settings
-from ..schemas.barcode_details import BarcodeDetails, RequestDetails
+from ..schemas.barcode_details import Payload, RequestDetails
 from fastapi import APIRouter, HTTPException
 from typing import Any
 from loguru import logger
-from ..crud import create_new_product
+from ..crud import update_history, create_product
 
 barcode_router = APIRouter(
   prefix='/barcode',
@@ -12,11 +12,11 @@ barcode_router = APIRouter(
 )
 
 
-@barcode_router.post("/details", response_model=BarcodeDetails)
+@barcode_router.post("/details", response_model=Payload)
 async def api_barcode_details(request:RequestDetails) -> Any:
   logger.debug(f"Request: {request}")
   try:
-      id = create_new_product(request.user_id, request.barcode)
+      id = update_history(request.user_id, request.barcode)
   except:
     raise HTTPException(status_code=400, detail="Failed to create a new barcode. Integrity constraint violated.")
   
@@ -24,8 +24,9 @@ async def api_barcode_details(request:RequestDetails) -> Any:
   response: dict = await get_json_response(openfoodfacts_product_url)
   if response.get('status') == 1:
     product = response.get('product')
-    return BarcodeDetails(
-      history_id=id,  
+    create_product(product)
+    return Payload(
+      history_id=id,
       id=request.barcode,
       name=product.get('product_name'),
       image_url=product.get('image_url'),

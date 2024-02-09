@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from uuid import UUID
 
 class BarcodeDetails(BaseModel):
-  history_id: UUID
   #Main Fields
   id: int
   name: str
@@ -25,6 +24,9 @@ class BarcodeDetails(BaseModel):
   packaging: str | None
   warnings: list[str]
   
+class Payload(BarcodeDetails):
+  history_id: UUID
+
 class RequestDetails(BaseModel):
   user_id : int
   barcode : int
