@@ -58,6 +58,7 @@ def create_product(product, db: Session = db):
     return new_product
 
 def get_product(product_id: int, db: Session = db):
+    logger.debug(f"Fetching product with ID {product_id}")
     return db.query(Product).filter(Product.id == product_id).first()
 
 def fetch_history(user_id: int, db: Session = db):
