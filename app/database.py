@@ -10,9 +10,12 @@ Base = declarative_base()
 
 
 # Adding Dependency
-async def get_db():
+def get_db():
     db_session = SessionLocal()
     try:
         yield db_session
     finally:
         db_session.close()
+
+db_gen = get_db()
+db = next(db_gen)
