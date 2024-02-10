@@ -7,34 +7,35 @@ import markdown2
 from ..schemas.barcode_details import BarcodeDetails
 
 
-SYSTEM_PROMPT = f"""You are Eco-Friendly and Health Agent.
-This is some data about a product in JSON Format. 
+SYSTEM_PROMPT = """You are Eco-Friendly and Health Agent.
+This is some {data} about a product in JSON Format. 
 Try to answer questions with reference to this"""
 
-def update_system_prompt(data):
-  product = data.get('product')
-  data = BarcodeDetails(
-      id=product.get('id'),
-      name=product.get('product_name'),
-      image_url=product.get('image_url'),
-      allergens=product.get('allergens'),
-      brands=product.get('brands'),
-      categories=product.get('categories'),
-      countries=product.get('countries'),
-      ecoscore_grade=product.get('ecoscore_grade'),
-      ecoscore_score=product.get('ecoscore_score'),
-      ingredients=product.get('ingredients_text_en'),
-      nova_group=product.get('nova_group'),
-      nutrient_levels=product.get('nutrient_levels') or {},
-      nutriments=product.get('nutriments') or {},
-      nutriscore_grade=product.get('nutriscore_grade'),
-      nutriscore_score=product.get('nutriscore_score'),
-      packaging=product.get('packaging_text_en'),
-      warnings=product.get('ecoscore_extended_data').get('impact').get('warnings') or []
-    )
-  global SYSTEM_PROMPT
-  SYSTEM_PROMPT = f"{SYSTEM_PROMPT}: data {data}"
-  logger.debug(f"SYSTEM_PROMPT: {SYSTEM_PROMPT}")
+def get_prompt_data(data):
+    logger.debug(f"Data: {data}")
+
+    formatted_data = {
+        "barcode": data.id,
+        "name": data.name,
+        "image_url": data.image_url,
+        "allergens": data.allergens,
+        "brands": data.brands,
+        "categories": data.categories,
+        "countries": data.countries,
+        "ecoscore_grade": data.ecoscore_grade,
+        "ecoscore_score": data.ecoscore_score,
+        "ingredients": data.ingredients,
+        "nova_group": data.nova_group,
+        "nutrient_levels": data.nutrient_levels,
+        "nutriments": data.nutriments,
+        "nutriscore_grade": data.nutriscore_grade,
+        "nutriscore_score": data.nutriscore_score,
+        "packaging": data.packaging,
+        "warnings": data.warnings
+    }
+
+    return formatted_data
+
 
 def to_html(markdown_format):
     return (
@@ -68,11 +69,12 @@ async def get_json_response(url: str, headers: dict | None = None, error_message
       raise HTTPException(status_code=error.response.status_code, detail=error_message)
     
     
-def query_llm(query):
+def query_llm(query, data):
+    data = get_prompt_data(data)
     model = genai.GenerativeModel('gemini-pro')
     chat = model.start_chat(history=[])
     input = f'''
-    SYSTEM_PROMPT:{SYSTEM_PROMPT} 
+    SYSTEM_PROMPT:{SYSTEM_PROMPT.format(data=data)} 
     user query: {query}
     '''
     logger.debug(f"Gemini Input: {input}")

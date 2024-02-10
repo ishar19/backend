@@ -3,7 +3,8 @@ import google.generativeai as genai
 from ..config import settings
 from ..dependencies.utils import query_llm
 import json
-
+from ..crud import get_product
+from loguru import logger
 
 # Model initialization
 genai.configure(api_key=settings.GEMINI_KEY)
@@ -38,8 +39,10 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.send_text('!<FIN>!')
 
 @llm_router.get("/chat")
-async def chat_endpoint(user_query):
-    response  = query_llm(user_query)
+async def chat_endpoint(user_query,barcode):
+    barcode_details = get_product(barcode)
+    logger.debug(f"Barcode details: {barcode_details}")
+    response  = query_llm(user_query, barcode_details)
     return response
     
     
