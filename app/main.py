@@ -1,5 +1,5 @@
 
-from .routers import barcode_router,llm_router
+from .routers import barcode_router,llm_router,history_router
 from fastapi import FastAPI
 from fastapi.security import (
     OAuth2PasswordBearer,
@@ -41,3 +41,4 @@ async def root():
 
 app.include_router(llm_router)
 app.include_router(barcode_router)
+app.include_router(history_router)

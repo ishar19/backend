@@ -1,12 +1,20 @@
-from ..dependencies.utils import get_json_response
-from ..config import settings
-from ..schemas.barcode_details import BarcodeDetails, RequestDetails
-from fastapi import APIRouter, HTTPException
-from typing import Any
+from fastapi import APIRouter
 from loguru import logger
-from ..crud import create_new_product
+from typing import List, Dict
+from fastapi import Query
+from ..models import History
+from sqlalchemy.orm import Session
+from ..database import db
+from sqlalchemy import desc
+from ..schemas.history import HistoryResponse
+from ..crud import fetch_history
 
 history_router = APIRouter(
   prefix='/history',
   tags=['Fetch History']
 )
+
+
+@history_router.get("/fetch/{user_id}")
+def get_history(user_id: int) -> List[dict]:
+  return fetch_history(user_id)

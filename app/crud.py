@@ -4,20 +4,11 @@ from sqlalchemy.orm import Session
 from fastapi import Depends
 from sqlalchemy.exc import IntegrityError
 from .models import History,Product
-from .database import get_db,SessionLocal
+from .database import db
 from loguru import logger
-
-
-
-def get_db():
-    db_session = SessionLocal()
-    try:
-        yield db_session
-    finally:
-        db_session.close()
-
-db_gen = get_db()
-db = next(db_gen)
+from sqlalchemy.exc import SQLAlchemyError
+from fastapi import HTTPException
+from sqlalchemy import desc
 
 def update_history(user_id, barcode, db: Session = db):
     logger.debug(f"Creating new barcode for user_id: {user_id}, barcode: {barcode}")
@@ -65,3 +56,15 @@ def create_product(product, db: Session = db):
     db.commit()
     db.refresh(new_product)
     return new_product
+
+def get_product(product_id: int, db: Session = db):
+    return db.query(Product).filter(Product.id == product_id).first()
+
+def fetch_history(user_id: int, db: Session = db):
+    try:
+        history_records = db.query(History).filter(History.user_id == user_id).order_by(desc(History.dateCreated)).all()
+        result = [{"id": record.id, "barcode": record.barcode} for record in history_records]
+
+        return result
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail="Database error occurred")
