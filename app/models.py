@@ -28,6 +28,7 @@ class Product(Base):
     name = Column(String)
     allergens= Column(String)
     brands = Column(String)
+    carbon_footprint = Column(Integer)
     categories = Column(String)
     countries = Column(String)
     ecoscore_grade = Column(String)

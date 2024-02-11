@@ -1,7 +1,8 @@
+from ..database import get_db
 from fastapi import APIRouter
 from loguru import logger
 from typing import List, Dict
-from fastapi import Query
+from fastapi import Depends, Query
 from ..models import History
 from sqlalchemy.orm import Session
 from ..database import db
@@ -16,5 +17,5 @@ history_router = APIRouter(
 
 
 @history_router.get("/fetch/{user_id}")
-def get_history(user_id: int) -> List[dict]:
-  return fetch_history(user_id)
+def get_history(user_id: int, db: Session = Depends(get_db)) -> List[dict]:
+  return fetch_history(user_id, db)
