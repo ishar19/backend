@@ -15,21 +15,6 @@ Try to answer questions with reference to this"""
 model = genai.GenerativeModel('gemini-pro')
 chat = model.start_chat(history=[])
 
-def to_html(markdown_format):
-    return (
-        markdown2.markdown(markdown_format)
-        .replace("\\", "")
-        .replace("<h1>", "<h7>")
-        .replace("</h1>", "</h7>")
-        .replace("\\\\", "")
-        .replace("```", "")
-        .replace("python", "")
-        .replace("\n","<br>")
-        .replace('"',"")
-        .replace("#","<b>")
-    )
-    
-
 def removeEmpty(paragraph):
     lines = paragraph.split('\n')
     non_empty_lines = [line for line in lines if line.strip() != '']
@@ -59,4 +44,4 @@ def query_llm(query: str, data: Product):
   logger.debug(f"Gemini Input: {input}")
   response = chat.send_message(input)
   logger.debug(f"Gemini Response: {response}")
-  return removeEmpty(to_html(response.text))
+  return removeEmpty(response.text)
