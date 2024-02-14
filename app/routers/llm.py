@@ -43,8 +43,10 @@ async def websocket_endpoint(websocket: WebSocket):
 
 @llm_router.post("/chat")
 async def chat_endpoint(request: ChatRequestDetails, db: Session = Depends(get_db)) -> str:
-    product = get_product(request.barcode)
-    logger.debug(f"Barcode details: {product.__dict__}")
+    if request.barcode:
+        product = get_product(request.barcode)
+        logger.debug(f"Barcode details: {product.__dict__}")
+    product = None    
     response  = query_llm(request.user_query, product)
     return response
     

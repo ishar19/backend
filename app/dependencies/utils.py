@@ -12,6 +12,9 @@ SYSTEM_PROMPT = """You are Eco-Friendly and Health Agent.
 This is some {data} about a product in JSON Format. 
 Try to answer questions with reference to this"""
 
+model = genai.GenerativeModel('gemini-pro')
+chat = model.start_chat(history=[])
+
 def to_html(markdown_format):
     return (
         markdown2.markdown(markdown_format)
@@ -43,16 +46,17 @@ async def get_json_response(url: str, headers: dict | None = None, error_message
     except httpx.HTTPStatusError as error:
       raise HTTPException(status_code=error.response.status_code, detail=error_message)
     
-    
+
 def query_llm(query: str, data: Product):
-    data_dict = data.__dict__
-    model = genai.GenerativeModel('gemini-pro')
-    chat = model.start_chat(history=[])
-    input = f'''
-    SYSTEM_PROMPT:{SYSTEM_PROMPT.format(data=data_dict)} 
-    user query: {query}
-    '''
-    logger.debug(f"Gemini Input: {input}")
-    response = chat.send_message(input)
-    logger.debug(f"Gemini Response: {response}")
-    return removeEmpty(to_html(response.text))
+  if data:
+      data_dict = data.__dict__
+      input = f'''
+      SYSTEM_PROMPT:{SYSTEM_PROMPT.format(data=data_dict)} 
+      user query: {query}
+      '''
+  else:    
+    input = query    
+  logger.debug(f"Gemini Input: {input}")
+  response = chat.send_message(input)
+  logger.debug(f"Gemini Response: {response}")
+  return removeEmpty(to_html(response.text))
