@@ -17,5 +17,5 @@ history_router = APIRouter(
 
 
 @history_router.get("/fetch/{user_id}")
-def get_history(user_id: int, db: Session = Depends(get_db)) -> List[dict]:
+def get_history(user_id: str, db: Session = Depends(get_db)) -> List[dict]:
   return fetch_history(user_id, db)

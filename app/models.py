@@ -15,11 +15,18 @@ from .database import Base
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
+class User(Base):
+    __tablename__ = 'user'
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String)
+    email = Column(String, unique=True, index=True)
+    
+    
 class History(Base):
     __tablename__ = 'history'
     id = Column(UUID(as_uuid=True), primary_key=True, index=True)
     dateCreated = Column(DateTime, nullable=False)
-    user_id = Column(Integer)
+    user_id = Column(String, ForeignKey('user.id'), nullable=False)
     barcode = Column(BigInteger)
 
 class Product(Base):

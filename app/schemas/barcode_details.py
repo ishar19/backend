@@ -45,5 +45,5 @@ class BarcodeLookupHistory(BarcodeDetails):
     ) 
 
 class BarcodeRequestDetails(BaseModel):
-  user_id : int
+  user_id : str
   barcode : int

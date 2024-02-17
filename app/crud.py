@@ -61,7 +61,7 @@ def get_product(product_id: int, db: Session = db):
     logger.debug(f"Fetching product with ID {product_id}")
     return db.get(Product, product_id)
 
-def fetch_history(user_id: int, db: Session = db):
+def fetch_history(user_id: str, db: Session = db):
     try:
         history_records = db.query(History).filter(History.user_id == user_id).order_by(desc(History.dateCreated)).all()
         result = [{"id": record.id, "barcode": record.barcode} for record in history_records]
