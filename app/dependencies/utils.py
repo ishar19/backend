@@ -3,7 +3,6 @@ from typing import Any
 import httpx
 import google.generativeai as genai
 from loguru import logger
-import markdown2
 from ..models import Product
 from ..schemas.barcode_details import BarcodeDetails
 
@@ -15,11 +14,11 @@ Try to answer questions with reference to this"""
 model = genai.GenerativeModel('gemini-pro')
 chat = model.start_chat(history=[])
 
-def removeEmpty(paragraph):
-    lines = paragraph.split('\n')
-    non_empty_lines = [line for line in lines if line.strip() != '']
-    cleaned_paragraph = '\n'.join(non_empty_lines)
-    return cleaned_paragraph
+# def removeEmpty(paragraph):
+#     lines = paragraph.split('\n')
+#     non_empty_lines = [line for line in lines if line.strip() != '']
+#     cleaned_paragraph = '\n'.join(non_empty_lines)
+#     return cleaned_paragraph
 
 async def get_json_response(url: str, headers: dict | None = None, error_message: str | None = None) -> Any:
   logger.debug(f"Fetching JSON from {url}")
@@ -44,4 +43,4 @@ def query_llm(query: str, data: Product):
   logger.debug(f"Gemini Input: {input}")
   response = chat.send_message(input)
   logger.debug(f"Gemini Response: {response}")
-  return removeEmpty(response.text)
+  return response.text
