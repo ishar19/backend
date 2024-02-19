@@ -17,7 +17,7 @@ user_router = APIRouter(
 @user_router.post("/create")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     logger.debug(f"Creating new user: {user}")
-    new_user = User(id =user.id,name=user.name, email=user.email)
+    new_user = User(id =user.id,name=user.name, email=user.email, image_url = user.image_url)
     try:
         db.add(new_user)
         db.commit()

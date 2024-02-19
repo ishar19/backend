@@ -20,6 +20,7 @@ class User(Base):
     id = Column(String, primary_key=True, index=True)
     name = Column(String)
     email = Column(String, unique=True, index=True)
+    image_url = Column(String)
     
     
 class History(Base):
