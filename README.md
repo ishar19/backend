@@ -9,7 +9,7 @@ These instructions will help you run the Fast API locally on your machine.
 
 ## Prerequisites
 
-Before you begin, make sure you have he following installed:
+Before you begin, make sure you have the following installed:
 
 -> [Python 3.11](https://www.python.org/downloads/release/python-3110/)
 
