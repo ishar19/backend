@@ -19,7 +19,7 @@ Use the following commands to clone the project, navigate to the project directo
 
 1) git clone https://github.com/ishar19/backend.git
 2) cd backend
-3) pip install requirements.txt
+3) pip install -r requirements.txt
 4) uvicorn app.main:app --host 0.0.0.0 --port 80
 
 ## Test Endpoints
