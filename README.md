@@ -24,4 +24,4 @@ Use the following commands to clone the project, navigate to the project directo
 
 ## Test Endpoints
 
-You can the check out the [localhost](http://localhost:80/docs) URL for testing the endpoints.
+You can then check out the [localhost](http://localhost:80/docs) URL for testing the endpoints.
