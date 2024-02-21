@@ -5,7 +5,7 @@ https://greencartapi-vij805jw.b4a.run/docs
 ---
 # Getting Started
 
-These instructions will help you run the Fast API locally on your machine.
+These instructions will help you run the Fast API application locally on your machine.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ Before you begin, make sure you have the following installed:
 
 ## Clone and Setup
 
-Use the following commands to clone the project, navigate to the project directory, getting the dependencies and then finally running the FastAPI app locally.
+Use the following commands to clone the project, navigate to the project directory, getting the dependencies and then finally running the FastAPI application locally.
 
 1) git clone https://github.com/ishar19/backend.git
 2) cd backend
